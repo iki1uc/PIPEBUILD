@@ -1,142 +1,163 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="utf-8">
-<title>PIPEBUILD · Diamant‑Spiegel · Epochen‑Index</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<title>PIPEBUILD — DIAMANT-SPIEGEL INDEX</title>
 
 <style>
-  body {
+body {
     background:#000;
-    color:#7dd3fc;
-    font-family:monospace;
-    margin:0;
+    color:#0ff;
+    font-family:Consolas;
     padding:20px;
-  }
-
-  h1 {
-    color:#00eaff;
-    text-shadow:0 0 12px #00eaff;
-    margin-bottom:20px;
-  }
-
-  .epoch {
-    border:1px solid #0a1a2a;
-    background:#0b1220;
+}
+h1, h2 {
+    color:#6cf;
+    text-shadow:0 0 12px #6cf;
+}
+section {
+    background:#0b0b0b;
+    border:1px solid #222;
     padding:15px;
     margin-bottom:20px;
     border-radius:8px;
-    box-shadow:0 0 12px #00eaff55;
-  }
-
-  .epoch h2 {
-    color:#ffaa00;
-    margin:0 0 10px 0;
-    text-shadow:0 0 12px #ffaa00;
-  }
-
-  .entry {
-    padding:6px 0;
-    border-bottom:1px solid #1f2937;
-  }
-
-  button {
-    background:#00eaff;
-    color:#000;
-    padding:10px 16px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    font-weight:bold;
-    margin-bottom:20px;
-  }
+    box-shadow:0 0 12px #004466;
+}
+pre {
+    background:#111;
+    border:1px solid #333;
+    padding:12px;
+    white-space:pre-wrap;
+}
+table {
+    width:100%;
+    border-collapse:collapse;
+    margin-top:12px;
+}
+td, th {
+    border:1px solid #333;
+    padding:6px;
+}
+.diamond {
+    border-left:3px solid #0ff;
+    padding-left:12px;
+    margin-bottom:12px;
+}
 </style>
+
+<script>
+// universeller CSV Loader
+async function loadCSV(id, file){
+    try {
+        const txt = await fetch(file).then(r => r.text());
+        document.getElementById(id).textContent = txt;
+    } catch {
+        document.getElementById(id).textContent = "Fehler: Datei nicht gefunden.";
+    }
+}
+</script>
+
 </head>
 
 <body>
 
-<h1>PIPEBUILD · Diamant‑Spiegel · Epochen‑Index</h1>
+<h1>PIPEBUILD — DIAMANT-SPIEGEL INDEX</h1>
 
-<button id="load">Alle Epochen laden</button>
+<section>
+<h2>IDENTITÄT</h2>
+<div class="diamond">
+<b>ID:</b> PIPEBUILD<br>
+<b>INSTANCE:</b> iki1uc<br>
+<b>KERN:</b> MASTER-KERN<br>
+<b>MODUS:</b> BUILD-KERN<br>
+<b>STATUS:</b> AKTIV<br>
+</div>
 
-<div id="epochen"></div>
+<pre>
+DIAMANT-SPIEGEL = ALLE DATEIEN / ALLE DATENLAGEN / ALLE ACHSEN
+PIPEBUILD = LADEN / SPIEGELN / BINDEN / AUSGEBEN
+STATE = stabil
+FREQ = 12e
+NC = aktiv
+ROM = aktiv
+</pre>
+</section>
 
-<script type="module">
+<section>
+<h2>MODULE — AKTIV</h2>
+<div class="diamond">✔ PIPE INDEX</div>
+<div class="diamond">✔ PIPE BIND</div>
+<div class="diamond">✔ PIPE CLASS</div>
+<div class="diamond">✔ PIPE GEO</div>
+<div class="diamond">✔ PIPE META</div>
+<div class="diamond">✔ PIPE WEIGHT</div>
+<div class="diamond">✔ PIPE STABLE</div>
+<div class="diamond">✔ PIPE HOTSWAP</div>
+<div class="diamond">✔ PIPE OVERDRIVE</div>
+</section>
 
-import { loadRAW } from "./loader.csv";
-import { bindRAW } from "./binder.js";
+<section>
+<h2>CSV — DIAMANT-SPIEGEL</h2>
 
-async function loadAll(){
+<h3>Achse-Zahl (3)</h3>
+<pre id="csv_achse3">lade…</pre>
 
-    const epochenDiv = document.getElementById("epochen");
-    epochenDiv.innerHTML = "";
+<h3>Axiom-Dreieck (6)</h3>
+<pre id="csv_dreieck6">lade…</pre>
 
-    // ⭐ RAW-Dateien laden
-    const achse = await loadRAW("./achse-quelle-7.csv");
-    const modul = await loadRAW("./modul-rel-0.csv");
-    const axiom = await loadRAW("./axiom-dreieck-6.csv");
-    const pos = await loadRAW("./pos-achse-0.csv");
-    const mech = await loadRAW("./mechanismus-zweck-4.csv");
+<h3>Mechanismus-Zweck (4)</h3>
+<pre id="csv_mech4">lade…</pre>
 
-    // ⭐ Epoche 1: Achsen
-    addEpoch("Epoche 1 · Achsen", achse.map(a => "Achse: " + a.join(" → ")));
+<h3>Achse-Quelle (7)</h3>
+<pre id="csv_achse7">lade…</pre>
 
-    // ⭐ Epoche 2: Module
-    addEpoch("Epoche 2 · Module", modul.map(m => "Modul: " + m.join(" → ")));
+<h3>Modul-REL (0)</h3>
+<pre id="csv_rel0">lade…</pre>
 
-    // ⭐ Epoche 3: Axiome
-    addEpoch("Epoche 3 · Axiome", axiom.map(ax => "Axiom: " + ax.join(" → ")));
+<h3>POS-Achse (0)</h3>
+<pre id="csv_pos0">lade…</pre>
 
-    // ⭐ Epoche 4: Positionen
-    addEpoch("Epoche 4 · Positionen", pos.map(p => "Position: " + p.join(" → ")));
-
-    // ⭐ Epoche 5: Mechanismen
-    addEpoch("Epoche 5 · Mechanismen", mech.map(m => "Mechanismus: " + m.join(" → ")));
-
-    // ⭐ Epoche 6: Bindungen (Achse ↔ Modul)
-    const bindung = bindRAW(
-        achse.map(a => a[0]),
-        modul.map(m => m[1])
-    );
-
-    addEpoch("Epoche 6 · Bindungen", bindung.map(b => `Bindung: ${b.from} → ${b.to}`));
-
-    // ⭐ Epoche 7: Diamant‑Spiegel (Alles zusammen)
-    const spiegel = [
-        ...achse.map(a => "Achse: " + a.join(" → ")),
-        ...modul.map(m => "Modul: " + m.join(" → ")),
-        ...axiom.map(ax => "Axiom: " + ax.join(" → ")),
-        ...pos.map(p => "Position: " + p.join(" → ")),
-        ...mech.map(m => "Mechanismus: " + m.join(" → ")),
-        ...bindung.map(b => `Bindung: ${b.from} → ${b.to}`)
-    ];
-
-    addEpoch("Epoche 7 · Diamant‑Spiegel · ALLES", spiegel);
-}
-
-function addEpoch(title, entries){
-    const epochenDiv = document.getElementById("epochen");
-
-    const ep = document.createElement("div");
-    ep.className = "epoch";
-
-    const h = document.createElement("h2");
-    h.textContent = title;
-    ep.appendChild(h);
-
-    entries.forEach(e => {
-        const div = document.createElement("div");
-        div.className = "entry";
-        div.textContent = e;
-        ep.appendChild(div);
-    });
-
-    epochenDiv.appendChild(ep);
-}
-
-document.getElementById("load").onclick = loadAll;
-
+<script>
+loadCSV("csv_achse3", "achse-zahl-3.csv");
+loadCSV("csv_dreieck6", "axiom-dreieck-6.csv");
+loadCSV("csv_mech4", "mechanismus-zweck-4.csv");
+loadCSV("csv_achse7", "achse-quelle-7.csv");
+loadCSV("csv_rel0", "modul-rel-0.csv");
+loadCSV("csv_pos0", "pos-achse-0.csv");
 </script>
+</section>
+
+<section>
+<h2>ACHSE-MATRIX</h2>
+
+<table>
+<tr><th>Achse</th><th>Quelle</th><th>Funktion</th><th>Pipeline</th></tr>
+<tr><td>3</td><td>achse-zahl-3.csv</td><td>Grundachse</td><td>PIPEBUILD</td></tr>
+<tr><td>4</td><td>mechanismus-zweck-4.csv</td><td>Zweck</td><td>PIPEBUILD</td></tr>
+<tr><td>6</td><td>axiom-dreieck-6.csv</td><td>Dreieck</td><td>PIPEBUILD</td></tr>
+<tr><td>7</td><td>achse-quelle-7.csv</td><td>Transit</td><td>RESPO</td></tr>
+<tr><td>27</td><td>Build-Wurzel</td><td>Struktur</td><td>PIPEBUILD</td></tr>
+</table>
+</section>
+
+<section>
+<h2>DIAMANT-SPIEGEL — ALLE LAGEN</h2>
+<pre>
+SPIEGEL-LAGEN:
+- Achsen
+- Module
+- Axiome
+- Mechanismen
+- Positionen
+- Bindungen
+- Meta-Schichten
+- GEO-Schichten
+- CLASS-Schichten
+- STABLE-Schichten
+- OVERDRIVE-Schichten
+- HOTSWAP-Schichten
+</pre>
+</section>
 
 </body>
 </html>
