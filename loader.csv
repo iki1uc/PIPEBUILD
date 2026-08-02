@@ -1,0 +1,5 @@
+async function loadRAW(path){
+    const text = await fetch(path).then(r => r.text());
+    const rows = text.trim().split("\n").map(r => r.split(","));
+    return rows;
+}
