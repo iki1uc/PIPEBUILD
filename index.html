@@ -80,6 +80,10 @@ STATE = stabil
 FREQ = 12e
 NC = aktiv
 ROM = aktiv
+RESPO = inUMlaufweg (Achse 7)
+QI = Öffnung (3→9)
+IQQ = Schließung (9→81)
+PIPELINE9 = Prüfung (REL/RDY/FAL/MISS)
 </pre>
 </section>
 
@@ -94,6 +98,7 @@ ROM = aktiv
 <div class="diamond">✔ PIPE STABLE</div>
 <div class="diamond">✔ PIPE HOTSWAP</div>
 <div class="diamond">✔ PIPE OVERDRIVE</div>
+<div class="diamond">✔ RESPO — inUMlaufweg</div>
 </section>
 
 <section>
@@ -111,6 +116,21 @@ ROM = aktiv
 <h3>Achse-Quelle (7)</h3>
 <pre id="csv_achse7">lade…</pre>
 
+<h3>Modul-Funktion (3)</h3>
+<pre id="csv_funktion3">lade…</pre>
+
+<h3>Modul-Marktrolle (12)</h3>
+<pre id="csv_markt12">lade…</pre>
+
+<h3>Raum-Symbol (7)</h3>
+<pre id="csv_raum7">lade…</pre>
+
+<h3>Schnittstelle-Bandbreite (6)</h3>
+<pre id="csv_band6">lade…</pre>
+
+<h3>TP-Marktrolle (5)</h3>
+<pre id="csv_tp5">lade…</pre>
+
 <h3>Modul-REL (0)</h3>
 <pre id="csv_rel0">lade…</pre>
 
@@ -122,6 +142,11 @@ loadCSV("csv_achse3", "achse-zahl-3.csv");
 loadCSV("csv_dreieck6", "axiom-dreieck-6.csv");
 loadCSV("csv_mech4", "mechanismus-zweck-4.csv");
 loadCSV("csv_achse7", "achse-quelle-7.csv");
+loadCSV("csv_funktion3", "modul-funktion-3.csv");
+loadCSV("csv_markt12", "modul-marktrolle-12.csv");
+loadCSV("csv_raum7", "raum-symbol-7.csv");
+loadCSV("csv_band6", "schnittstelle-bandbreite-6.csv");
+loadCSV("csv_tp5", "tp-marktrolle-5.csv");
 loadCSV("csv_rel0", "modul-rel-0.csv");
 loadCSV("csv_pos0", "pos-achse-0.csv");
 </script>
@@ -135,7 +160,7 @@ loadCSV("csv_pos0", "pos-achse-0.csv");
 <tr><td>3</td><td>achse-zahl-3.csv</td><td>Grundachse</td><td>PIPEBUILD</td></tr>
 <tr><td>4</td><td>mechanismus-zweck-4.csv</td><td>Zweck</td><td>PIPEBUILD</td></tr>
 <tr><td>6</td><td>axiom-dreieck-6.csv</td><td>Dreieck</td><td>PIPEBUILD</td></tr>
-<tr><td>7</td><td>achse-quelle-7.csv</td><td>Transit</td><td>RESPO</td></tr>
+<tr><td>7</td><td>achse-quelle-7.csv</td><td>Umlaufweg</td><td>RESPO</td></tr>
 <tr><td>27</td><td>Build-Wurzel</td><td>Struktur</td><td>PIPEBUILD</td></tr>
 </table>
 </section>
@@ -156,6 +181,9 @@ SPIEGEL-LAGEN:
 - STABLE-Schichten
 - OVERDRIVE-Schichten
 - HOTSWAP-Schichten
+- UMLAUFWEG (RESPO)
+- QI / IQQ
+- PIPELINE9
 </pre>
 </section>
 
