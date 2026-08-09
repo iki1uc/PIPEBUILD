@@ -2,190 +2,132 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>PIPEBUILD — DIAMANT-SPIEGEL INDEX</title>
+<title>PIPEBUILD · Baukern · iki1uc</title>
 
 <style>
-body {
-    background:#000;
-    color:#0ff;
-    font-family:Consolas;
-    padding:20px;
-}
-h1, h2 {
-    color:#6cf;
-    text-shadow:0 0 12px #6cf;
-}
-section {
-    background:#0b0b0b;
-    border:1px solid #222;
-    padding:15px;
-    margin-bottom:20px;
-    border-radius:8px;
-    box-shadow:0 0 12px #004466;
-}
-pre {
-    background:#111;
-    border:1px solid #333;
-    padding:12px;
-    white-space:pre-wrap;
-}
-table {
-    width:100%;
-    border-collapse:collapse;
-    margin-top:12px;
-}
-td, th {
-    border:1px solid #333;
-    padding:6px;
-}
-.diamond {
-    border-left:3px solid #0ff;
-    padding-left:12px;
-    margin-bottom:12px;
-}
+    body {
+        background:#000;
+        color:#0f0;
+        font-family:Consolas, monospace;
+        padding:20px;
+    }
+    h1 { color:#6cf; }
+    pre {
+        background:#111;
+        padding:12px;
+        border:1px solid #333;
+        border-radius:6px;
+        color:#0f0;
+    }
+    .block { margin-bottom:20px; }
 </style>
 
-<script>
-// universeller CSV Loader
-async function loadCSV(id, file){
-    try {
-        const txt = await fetch(file).then(r => r.text());
-        document.getElementById(id).textContent = txt;
-    } catch {
-        document.getElementById(id).textContent = "Fehler: Datei nicht gefunden.";
-    }
+<script type="module">
+
+// =========================
+// CSV Loader
+// =========================
+
+async function loadCSV(name){
+    const res = await fetch(name);
+    const text = await res.text();
+    return text.split("\n").map(r => r.split(","));
 }
+
+// =========================
+// ITEM Loader
+// =========================
+
+async function loadItem(name){
+    const res = await fetch(name);
+    return await res.text();
+}
+
+// =========================
+// PIPEBUILD Start
+// =========================
+
+async function PIPEBUILD_START(){
+
+    // Kernmodule
+    const pipeline = await import("./Pipeline.js");
+    const binder = await import("./binder.js");
+    const exporter = await import("./Export.js");
+
+    // UI‑Module
+    const id = await loadItem("ID.html");
+    const ui = await loadItem("UI.html");
+    const scanner = await loadItem("UI-SCANNER.html");
+
+    // UC‑Items
+    const fusion01 = await loadItem("uc-fusion-01.item");
+    const fusion02 = await loadItem("uc-fusion-02.item");
+    const operator = await loadItem("uc-operator.item");
+    const posRouter = await loadItem("pos-router.uc.item");
+
+    // CSV‑Daten
+    const selektor = await loadCSV("Selektor.csv");
+    const loader = await loadCSV("loader.csv");
+    const achse7 = await loadCSV("achse-quelle-7.csv");
+    const achse7b = await loadCSV("achse-quelle-7 (1).csv");
+    const achseZahl3 = await loadCSV("achse-zahl-3.csv");
+    const axiom6 = await loadCSV("axiom-dreieck-6.csv");
+    const modulFunktion3 = await loadCSV("modul-funktion-3.csv");
+    const modulMarkt12 = await loadCSV("modul-marktrolle-12.csv");
+    const modulRel0 = await loadCSV("modul-rel-0.csv");
+    const nrName6 = await loadCSV("nr-name-6.csv");
+    const posAchse0 = await loadCSV("pos-achse-0.csv");
+    const raumSymbol7 = await loadCSV("raum-symbol-7.csv");
+    const schnitt6 = await loadCSV("schnittstelle-bandbreite-6.csv");
+    const tpMarkt5 = await loadCSV("tp-marktrolle-5.csv");
+    const mechan4 = await loadCSV("mechanismus-zweck-4.csv");
+
+    return {
+        pipeline,
+        binder,
+        exporter,
+        ui: { id, ui, scanner },
+        uc: { fusion01, fusion02, operator, posRouter },
+        csv: {
+            selektor,
+            loader,
+            achse7,
+            achse7b,
+            achseZahl3,
+            axiom6,
+            modulFunktion3,
+            modulMarkt12,
+            modulRel0,
+            nrName6,
+            posAchse0,
+            raumSymbol7,
+            schnitt6,
+            tpMarkt5,
+            mechan4
+        }
+    };
+}
+
+// =========================
+// UI
+// =========================
+
+window.onload = async () => {
+    const out = await PIPEBUILD_START();
+    document.getElementById("out").textContent =
+        JSON.stringify(out, null, 2);
+};
 </script>
 
 </head>
 
 <body>
 
-<h1>PIPEBUILD — DIAMANT-SPIEGEL INDEX</h1>
+<h1>PIPEBUILD · Baukern · iki1uc</h1>
 
-<section>
-<h2>IDENTITÄT</h2>
-<div class="diamond">
-<b>ID:</b> PIPEBUILD<br>
-<b>INSTANCE:</b> iki1uc<br>
-<b>KERN:</b> MASTER-KERN<br>
-<b>MODUS:</b> BUILD-KERN<br>
-<b>STATUS:</b> AKTIV<br>
+<div class="block">
+    <pre id="out">Lade PIPEBUILD…</pre>
 </div>
-
-<pre>
-DIAMANT-SPIEGEL = ALLE DATEIEN / ALLE DATENLAGEN / ALLE ACHSEN
-PIPEBUILD = LADEN / SPIEGELN / BINDEN / AUSGEBEN
-STATE = stabil
-FREQ = 12e
-NC = aktiv
-ROM = aktiv
-RESPO = inUMlaufweg (Achse 7)
-QI = Öffnung (3→9)
-IQQ = Schließung (9→81)
-PIPELINE9 = Prüfung (REL/RDY/FAL/MISS)
-</pre>
-</section>
-
-<section>
-<h2>MODULE — AKTIV</h2>
-<div class="diamond">✔ PIPE INDEX</div>
-<div class="diamond">✔ PIPE BIND</div>
-<div class="diamond">✔ PIPE CLASS</div>
-<div class="diamond">✔ PIPE GEO</div>
-<div class="diamond">✔ PIPE META</div>
-<div class="diamond">✔ PIPE WEIGHT</div>
-<div class="diamond">✔ PIPE STABLE</div>
-<div class="diamond">✔ PIPE HOTSWAP</div>
-<div class="diamond">✔ PIPE OVERDRIVE</div>
-<div class="diamond">✔ RESPO — inUMlaufweg</div>
-</section>
-
-<section>
-<h2>CSV — DIAMANT-SPIEGEL</h2>
-
-<h3>Achse-Zahl (3)</h3>
-<pre id="csv_achse3">lade…</pre>
-
-<h3>Axiom-Dreieck (6)</h3>
-<pre id="csv_dreieck6">lade…</pre>
-
-<h3>Mechanismus-Zweck (4)</h3>
-<pre id="csv_mech4">lade…</pre>
-
-<h3>Achse-Quelle (7)</h3>
-<pre id="csv_achse7">lade…</pre>
-
-<h3>Modul-Funktion (3)</h3>
-<pre id="csv_funktion3">lade…</pre>
-
-<h3>Modul-Marktrolle (12)</h3>
-<pre id="csv_markt12">lade…</pre>
-
-<h3>Raum-Symbol (7)</h3>
-<pre id="csv_raum7">lade…</pre>
-
-<h3>Schnittstelle-Bandbreite (6)</h3>
-<pre id="csv_band6">lade…</pre>
-
-<h3>TP-Marktrolle (5)</h3>
-<pre id="csv_tp5">lade…</pre>
-
-<h3>Modul-REL (0)</h3>
-<pre id="csv_rel0">lade…</pre>
-
-<h3>POS-Achse (0)</h3>
-<pre id="csv_pos0">lade…</pre>
-
-<script>
-loadCSV("csv_achse3", "achse-zahl-3.csv");
-loadCSV("csv_dreieck6", "axiom-dreieck-6.csv");
-loadCSV("csv_mech4", "mechanismus-zweck-4.csv");
-loadCSV("csv_achse7", "achse-quelle-7.csv");
-loadCSV("csv_funktion3", "modul-funktion-3.csv");
-loadCSV("csv_markt12", "modul-marktrolle-12.csv");
-loadCSV("csv_raum7", "raum-symbol-7.csv");
-loadCSV("csv_band6", "schnittstelle-bandbreite-6.csv");
-loadCSV("csv_tp5", "tp-marktrolle-5.csv");
-loadCSV("csv_rel0", "modul-rel-0.csv");
-loadCSV("csv_pos0", "pos-achse-0.csv");
-</script>
-</section>
-
-<section>
-<h2>ACHSE-MATRIX</h2>
-
-<table>
-<tr><th>Achse</th><th>Quelle</th><th>Funktion</th><th>Pipeline</th></tr>
-<tr><td>3</td><td>achse-zahl-3.csv</td><td>Grundachse</td><td>PIPEBUILD</td></tr>
-<tr><td>4</td><td>mechanismus-zweck-4.csv</td><td>Zweck</td><td>PIPEBUILD</td></tr>
-<tr><td>6</td><td>axiom-dreieck-6.csv</td><td>Dreieck</td><td>PIPEBUILD</td></tr>
-<tr><td>7</td><td>achse-quelle-7.csv</td><td>Umlaufweg</td><td>RESPO</td></tr>
-<tr><td>27</td><td>Build-Wurzel</td><td>Struktur</td><td>PIPEBUILD</td></tr>
-</table>
-</section>
-
-<section>
-<h2>DIAMANT-SPIEGEL — ALLE LAGEN</h2>
-<pre>
-SPIEGEL-LAGEN:
-- Achsen
-- Module
-- Axiome
-- Mechanismen
-- Positionen
-- Bindungen
-- Meta-Schichten
-- GEO-Schichten
-- CLASS-Schichten
-- STABLE-Schichten
-- OVERDRIVE-Schichten
-- HOTSWAP-Schichten
-- UMLAUFWEG (RESPO)
-- QI / IQQ
-- PIPELINE9
-</pre>
-</section>
 
 </body>
 </html>
