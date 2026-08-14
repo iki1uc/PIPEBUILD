@@ -2,205 +2,123 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>PIPEBUILD · DIAMANT-SPIEGEL · MASTER-KERN</title>
+<title>PIPEBUILD · MASTER-KERN · QI/IQQ · DIAMANT-SPIEGEL</title>
 
 <style>
-body {
-    background:#000;
-    color:#0ff;
-    font-family:Consolas, monospace;
-    padding:20px;
-}
-h1, h2 {
-    color:#6cf;
-    text-shadow:0 0 12px #6cf;
-}
-section {
-    background:#0b0b0b;
-    border:1px solid #222;
-    padding:15px;
-    margin-bottom:20px;
-    border-radius:8px;
-    box-shadow:0 0 12px #004466;
-}
-pre {
-    background:#111;
-    border:1px solid #333;
-    padding:12px;
-    white-space:pre-wrap;
-}
-.diamond {
-    border-left:3px solid #0ff;
-    padding-left:12px;
-    margin-bottom:12px;
-}
+body{background:#000;color:#0ff;font-family:Consolas, monospace;padding:20px;}
+h1,h2{color:#6cf;text-shadow:0 0 12px #6cf;}
+section{background:#0b0b0b;border:1px solid #222;padding:15px;margin-bottom:20px;
+        border-radius:8px;box-shadow:0 0 12px #004466;}
+pre{background:#111;border:1px solid #333;padding:12px;white-space:pre-wrap;}
+button{background:#111;color:#0ff;border:1px solid #0ff;padding:10px 20px;margin:5px;}
 </style>
 
 <script type="module">
 
-// CSV Loader
-async function loadCSV(id, file){
-    try {
-        const txt = await fetch(file).then(r => r.text());
+// QI ENGINE
+import { QI } from "./QI.js";
+import { QI_CSV } from "./QI_CSV.js";
+
+// PIPELINE MODULES
+import { P4 } from "./pipelineP4.js";
+import { P0 } from "./pipelineP0.js";
+import { P1 } from "./pipelineP1.js";
+import { P2 } from "./pipelineP2.js";
+import { Pe } from "./pipelinePe.js";
+
+// CORE SCAN
+import { coreScan } from "./coreScan.js";
+
+// OUTPUT
+function out(msg){
+    document.getElementById("out").innerText = msg;
+}
+
+// QI BUTTONS
+window.qi_scan = () => {
+    const core = coreScan();
+    out("QI · MASTER-KERN\n" + JSON.stringify(QI.scan(core), null, 2));
+};
+
+window.qi_os = () => {
+    out("QI · OS\n" + JSON.stringify(QI.scan({id:"OS",core:true,fn:true,stable:true}), null, 2));
+};
+
+window.qi_respo = () => {
+    const core = coreScan();
+    out("QI · RESPO\n" + JSON.stringify(QI.scan(core.respo360), null, 2));
+};
+
+window.qi_pipe = () => {
+    const core = coreScan();
+    out("QI · PIPELINE\n" + JSON.stringify(QI.scan(P4.run(core)), null, 2));
+};
+
+window.qi_stage = () => {
+    out("QI · STAGE\n" + JSON.stringify(QI.scan({id:"STAGE",core:true,fn:true,ready:true}), null, 2));
+};
+
+window.qi_404 = () => {
+    out("QI · 404\n" + JSON.stringify(QI.scan({id:"404",stable:false,fn:false}), null, 2));
+};
+
+// PIPELINE BUTTONS
+window.p4_switch = () => {
+    const core = coreScan();
+    out("P4 · start\n" + JSON.stringify(P4.run(core), null, 2));
+};
+
+window.p0_switch = () => {
+    const core = coreScan();
+    out("P0 · wake\n" + JSON.stringify(P0.run(core), null, 2));
+};
+
+window.p1_switch = () => {
+    const core = coreScan();
+    out("P1 · melt\n" + JSON.stringify(P1.run(core), null, 2));
+};
+
+window.p2_switch = () => {
+    const core = coreScan();
+    out("P2 · merge\n" + JSON.stringify(P2.run(core), null, 2));
+};
+
+window.pe_switch = () => {
+    const core = coreScan();
+    out("Pe · finalize\n" + JSON.stringify(Pe.run(core), null, 2));
+};
+
+// CSV LOADER
+async function loadCSV(id,file){
+    try{
+        const txt = await fetch(file).then(r=>r.text());
         document.getElementById(id).textContent = txt;
-    } catch {
+    }catch{
         document.getElementById(id).textContent = "Fehler: Datei nicht gefunden.";
     }
 }
 
-// ITEM Loader
-async function loadItem(id, file){
-    try {
-        const txt = await fetch(file).then(r => r.text());
+// ITEM LOADER
+async function loadItem(id,file){
+    try{
+        const txt = await fetch(file).then(r=>r.text());
         document.getElementById(id).textContent = txt;
-    } catch {
+    }catch{
         document.getElementById(id).textContent = "Fehler: ITEM nicht gefunden.";
     }
 }
 
-// PIPEBUILD Start
+// LOAD ALL
 window.onload = () => {
 
-    // CSV-Lagen
-    loadCSV("csv_achse3", "achse-zahl-3.csv");
-    loadCSV("csv_dreieck6", "axiom-dreieck-6.csv");
-    loadCSV("csv_mech4", "mechanismus-zweck-4.csv");
-    loadCSV("csv_achse7", "achse-quelle-7.csv");
-    loadCSV("csv_funktion3", "modul-funktion-3.csv");
-    loadCSV("csv_markt12", "modul-marktrolle-12.csv");
-    loadCSV("csv_raum7", "raum-symbol-7.csv");
-    loadCSV("csv_band6", "schnittstelle-bandbreite-6.csv");
-    loadCSV("csv_tp5", "tp-marktrolle-5.csv");
-    loadCSV("csv_rel0", "modul-rel-0.csv");
-    loadCSV("csv_pos0", "pos-achse-0.csv");
-
-    // ITEM-Lagen
-    loadItem("item_fusion01", "uc-fusion-01.item");
-    loadItem("item_fusion02", "uc-fusion-02.item");
-    loadItem("item_operator", "uc-operator.item");
-    loadItem("item_posrouter", "pos-router.uc.item");
-};
-</script>
-
-</head>
-
-<body>
-
-<h1>PIPEBUILD · DIAMANT-SPIEGEL · MASTER-KERN</h1>
-
-<section>
-<h2>IDENTITÄT</h2>
-<div class="diamond">
-<b>ID:</b> PIPEBUILD<br>
-<b>INSTANCE:</b> iki1uc<br>
-<b>KERN:</b> MASTER-KERN<br>
-<b>MODUS:</b> BUILD-KERN<br>
-<b>STATUS:</b> AKTIV<br>
-</div>
-
-<pre>
-DIAMANT-SPIEGEL = ALLE DATEIEN / ALLE DATENLAGEN / ALLE ACHSEN
-PIPEBUILD = LADEN / SPIEGELN / BINDEN / AUSGEBEN
-STATE = stabil
-FREQ = 12e
-NC = aktiv
-ROM = aktiv
-RESPO = Umlaufweg (Achse 7)
-QI = Öffnung (3→9)
-IQQ = Schließung (9→81)
-PIPELINE9 = Prüfung (REL/RDY/FAL/MISS)
-</pre>
-</section>
-
-<section>
-<h2>MODULE — AKTIV</h2>
-<div class="diamond">✔ PIPE INDEX</div>
-<div class="diamond">✔ PIPE BIND</div>
-<div class="diamond">✔ PIPE CLASS</div>
-<div class="diamond">✔ PIPE GEO</div>
-<div class="diamond">✔ PIPE META</div>
-<div class="diamond">✔ PIPE WEIGHT</div>
-<div class="diamond">✔ PIPE STABLE</div>
-<div class="diamond">✔ PIPE HOTSWAP</div>
-<div class="diamond">✔ PIPE OVERDRIVE</div>
-<div class="diamond">✔ RESPO — Umlaufweg</div>
-</section>
-
-<section>
-<h2>CSV — DIAMANT-SPIEGEL</h2>
-
-<h3>Achse-Zahl (3)</h3>
-<pre id="csv_achse3">lade…</pre>
-
-<h3>Axiom-Dreieck (6)</h3>
-<pre id="csv_dreieck6">lade…</pre>
-
-<h3>Mechanismus-Zweck (4)</h3>
-<pre id="csv_mech4">lade…</pre>
-
-<h3>Achse-Quelle (7)</h3>
-<pre id="csv_achse7">lade…</pre>
-
-<h3>Modul-Funktion (3)</h3>
-<pre id="csv_funktion3">lade…</pre>
-
-<h3>Modul-Marktrolle (12)</h3>
-<pre id="csv_markt12">lade…</pre>
-
-<h3>Raum-Symbol (7)</h3>
-<pre id="csv_raum7">lade…</pre>
-
-<h3>Schnittstelle-Bandbreite (6)</h3>
-<pre id="csv_band6">lade…</pre>
-
-<h3>TP-Marktrolle (5)</h3>
-<pre id="csv_tp5">lade…</pre>
-
-<h3>Modul-REL (0)</h3>
-<pre id="csv_rel0">lade…</pre>
-
-<h3>POS-Achse (0)</h3>
-<pre id="csv_pos0">lade…</pre>
-</section>
-
-<section>
-<h2>ITEM — UC / POS / OPERATOR</h2>
-
-<h3>UC-Fusion 01</h3>
-<pre id="item_fusion01">lade…</pre>
-
-<h3>UC-Fusion 02</h3>
-<pre id="item_fusion02">lade…</pre>
-
-<h3>UC-Operator</h3>
-<pre id="item_operator">lade…</pre>
-
-<h3>POS-Router</h3>
-<pre id="item_posrouter">lade…</pre>
-
-</section>
-
-<section>
-<h2>DIAMANT-SPIEGEL — ALLE LAGEN</h2>
-<pre>
-SPIEGEL-LAGEN:
-- Achsen
-- Module
-- Axiome
-- Mechanismen
-- Positionen
-- Bindungen
-- Meta-Schichten
-- GEO-Schichten
-- CLASS-Schichten
-- STABLE-Schichten
-- OVERDRIVE-Schichten
-- HOTSWAP-Schichten
-- UMLAUFWEG (RESPO)
-- QI / IQQ
-- PIPELINE9
-</pre>
-</section>
-
-</body>
-</html>
+    // CSV
+    loadCSV("csv_achse3","achse-zahl-3.csv");
+    loadCSV("csv_dreieck6","axiom-dreieck-6.csv");
+    loadCSV("csv_mech4","mechanismus-zweck-4.csv");
+    loadCSV("csv_achse7","achse-quelle-7.csv");
+    loadCSV("csv_funktion3","modul-funktion-3.csv");
+    loadCSV("csv_markt12","modul-marktrolle-12.csv");
+    loadCSV("csv_raum7","raum-symbol-7.csv");
+    loadCSV("csv_band6","schnittstelle-bandbreite-6.csv");
+    loadCSV("csv_tp5","tp-marktrolle-5.csv");
+    loadCSV("csv_rel0","modul-rel-0.csv");
